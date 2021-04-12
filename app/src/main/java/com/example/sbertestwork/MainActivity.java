@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 
 import android.Manifest;
@@ -33,6 +34,7 @@ import com.example.sbertestwork.data.local.DatabaseSource;
 import com.example.sbertestwork.data.remote.WeatherRemoteSource;
 import com.example.sbertestwork.models.Weather;
 import com.example.sbertestwork.viewmodels.MainViewModel;
+import com.example.sbertestwork.viewmodels.MainViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private boolean isAccessFineLocationGranted;
     private MainViewModel viewModel;
     private FusedLocationProviderClient fusedLocationClient;
-
+    private MainViewModelFactory factory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +66,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         temperature = findViewById(R.id.temperature);
         windSpeed = findViewById(R.id.wind_speed);
         button= findViewById(R.id.local_weather);
+        factory= new MainViewModelFactory(new Repository(new WeatherRemoteSource(),
+                new DatabaseSource(this)));
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.setRepository(new Repository(new WeatherRemoteSource(),new DatabaseSource(this)));
+        viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
+
         if(viewModel.getData() ==null){
             checkLocationPermission();
         } else{

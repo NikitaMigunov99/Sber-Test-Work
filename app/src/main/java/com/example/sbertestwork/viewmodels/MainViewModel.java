@@ -13,9 +13,10 @@ public class MainViewModel extends ViewModel {
     private LiveData<Weather> weather;
     private Repository repository;
 
-    public void setRepository(Repository repository) {
+    public MainViewModel(Repository repository) {
         this.repository = repository;
     }
+
 
     public LiveData<Weather> getData() {
         return weather;
