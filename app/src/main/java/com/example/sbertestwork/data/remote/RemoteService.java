@@ -1,13 +1,11 @@
-package com.example.sbertestwork.repo;
+package com.example.sbertestwork.data.remote;
 
 import android.util.Log;
-
-import com.example.sbertestwork.api.LocalWeatherApi;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class APIRepo {
+public class RemoteService {
 
 
 
@@ -15,7 +13,7 @@ public class APIRepo {
     private static LocalWeatherApi localWeatherApi;
 
 
-    public APIRepo() {
+    public RemoteService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org")
                 .addConverterFactory(GsonConverterFactory.create())

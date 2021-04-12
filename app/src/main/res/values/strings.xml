@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">SberTestWork</string>
-    <string name="your_region">Погода в вашем регионе</string>
+    <string name="city">City</string>
+    <string name="location_permission">Для получения погоды в вашем регионе приложению необходимо ваше местоположение</string>
     <string name="temperature">+15</string>
     <string name="wind_speed">Ветер 3 м/с</string>
-    <string name="location_permission">Для получения погоды в вашем регионе приложению необходимо ваше местоположение</string>
     <string name="search_title">Поиск</string>
+    <string name="check_internet">Проверте интернет соединение</string>
+    <string name="input_city">Введите город на английском</string>
 
 
 </resources>

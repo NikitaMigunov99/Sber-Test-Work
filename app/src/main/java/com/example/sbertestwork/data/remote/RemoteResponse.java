@@ -1,10 +1,10 @@
-package com.example.sbertestwork.repo;
+package com.example.sbertestwork.data.remote;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-public class APIResponse {
+public class RemoteResponse {
 
 
     @SerializedName("coord")
@@ -152,7 +152,7 @@ public class APIResponse {
     }
 
 
-    public class Coord {
+    private class Coord {
 
         @SerializedName("lat")
         @Expose
@@ -179,7 +179,7 @@ public class APIResponse {
 
     }
 
-    public class Weather{
+    private class Weather{
         @SerializedName("id")
         @Expose
         private int id;
@@ -230,7 +230,7 @@ public class APIResponse {
 
     }
 
-    public class Main{
+    protected class Main{
 
         @SerializedName("temp")
         @Expose
@@ -300,19 +300,19 @@ public class APIResponse {
         }
     }
 
-    public class Wind{
+    protected class Wind{
         @SerializedName("speed")
         @Expose
-        private double speed;
+        private float speed;
         @SerializedName("deg")
         @Expose
         private double deg;
 
-        public double getSpeed() {
+        public float getSpeed() {
             return speed;
         }
 
-        public void setSpeed(double speed) {
+        public void setSpeed(float speed) {
             this.speed = speed;
         }
 
@@ -326,13 +326,13 @@ public class APIResponse {
 
     }
 
-    public class Clouds{
+    private class Clouds{
         @SerializedName("all")
         @Expose
         private int all;
     }
 
-    public class Sys{
+    private class Sys{
         @SerializedName("type")
         @Expose
         private int type;
