@@ -11,11 +11,14 @@ import com.example.sbertestwork.models.Weather;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class DatabaseSource {
 
 
     private Context context;
 
+    @Inject
     public DatabaseSource(Context context) {
         this.context = context;
     }

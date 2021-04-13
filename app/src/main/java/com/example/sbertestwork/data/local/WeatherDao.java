@@ -16,6 +16,9 @@ public interface WeatherDao {
     @Insert(onConflict = REPLACE)
     void insert(Weather weather);
 
-    @Query("SELECT * FROM weather LIMIT 1")
+    @Query("SELECT * FROM weather WHERE   time = (SELECT MAX(time)  FROM weather)")
     Weather getWeather();
+
+    @Query("SELECT * FROM weather")
+    List<Weather> getWeatherList();
 }

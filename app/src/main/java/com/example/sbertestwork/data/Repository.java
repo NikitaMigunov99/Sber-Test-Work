@@ -8,12 +8,16 @@ import com.example.sbertestwork.data.local.DatabaseSource;
 import com.example.sbertestwork.data.remote.WeatherRemoteSource;
 import com.example.sbertestwork.models.Weather;
 
+import javax.inject.Inject;
+
+
 public class Repository {
 
 
     private WeatherRemoteSource remoteSource;
     private DatabaseSource databaseSource;
 
+    @Inject
     public Repository(WeatherRemoteSource remoteSource, DatabaseSource databaseSource) {
         this.remoteSource = remoteSource;
         this.databaseSource = databaseSource;

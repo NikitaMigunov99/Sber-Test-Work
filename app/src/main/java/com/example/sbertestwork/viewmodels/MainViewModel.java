@@ -8,11 +8,24 @@ import androidx.lifecycle.ViewModel;
 import com.example.sbertestwork.data.Repository;
 import com.example.sbertestwork.models.Weather;
 
+import javax.inject.Inject;
+
 public class MainViewModel extends ViewModel {
 
     private LiveData<Weather> weather;
     private Repository repository;
+    private boolean isAccessFineLocationGranted;
 
+    public boolean isAccessFineLocationGranted() {
+        return isAccessFineLocationGranted;
+    }
+
+    public void setAccessFineLocationGranted(boolean accessFineLocationGranted) {
+        isAccessFineLocationGranted = accessFineLocationGranted;
+    }
+
+
+    @Inject
     public MainViewModel(Repository repository) {
         this.repository = repository;
     }

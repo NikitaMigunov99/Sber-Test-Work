@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sbertestwork.data.Repository;
 
+import javax.inject.Inject;
+
 public class MainViewModelFactory implements ViewModelProvider.Factory{
 
     private final Repository repository;
 
+    @Inject
     public MainViewModelFactory(Repository repository){
         this.repository=repository;
     }

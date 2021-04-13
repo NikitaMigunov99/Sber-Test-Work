@@ -3,19 +3,14 @@ package com.example.sbertestwork;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,6 +36,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
@@ -52,25 +49,24 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private Button button;
     private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST = 123;
     private String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-    private boolean isAccessFineLocationGranted;
     private MainViewModel viewModel;
     private FusedLocationProviderClient fusedLocationClient;
-    private MainViewModelFactory factory;
+    @Inject
+    MainViewModelFactory factory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ((MainApplication)getApplication()).getAppComponent().inject(this);
+
         city= findViewById(R.id.city);
         temperature = findViewById(R.id.temperature);
         windSpeed = findViewById(R.id.wind_speed);
         button= findViewById(R.id.local_weather);
-        factory= new MainViewModelFactory(new Repository(new WeatherRemoteSource(),
-                new DatabaseSource(this)));
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         viewModel = new ViewModelProvider(this, factory).get(MainViewModel.class);
 
         if(viewModel.getData() ==null){
@@ -82,7 +78,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkLocationPermission();
+                Log.d("Test", " get my location temperature ");
+                //checkLocationPermission();
+                if(viewModel.isAccessFineLocationGranted()) {
+                    getCurrentLocationWeather();
+                }
             }
         });
     }
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private void checkLocationPermission(){
         if (EasyPermissions.hasPermissions(this, permission)) {
             Log.d("Test", " EasyPermissions.hasPermissions true ");
+            viewModel.setAccessFineLocationGranted(true);
             if(viewModel.getData()==null)
                 getCurrentLocationWeather();
 
@@ -144,8 +145,23 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(Weather weather) {
-                temperature.setText(String.valueOf(weather.getTemperature()));
-                windSpeed.setText("Ветер "+ weather.getWindSpeed() +" м/с");
+
+                String temperatureValue= String.valueOf(weather.getTemperature());
+                if(weather.getTemperature()>0)
+                    temperature.setText(getResources().getString(R.string.temperature)+" +"
+                            +temperatureValue);
+
+                else if(weather.getTemperature()<0){
+                    temperature.setText(getResources().getString(R.string.temperature)+" -"
+                            +temperatureValue);
+                }else {
+                    temperature.setText(getResources().getString(R.string.temperature)+" "
+                            +temperatureValue);
+                }
+
+                windSpeed.setText(getResources().getString(R.string.wind)+" "+
+                        weather.getWindSpeed() +" "+
+                        getResources().getString(R.string.speed));
                 city.setText(weather.getCity());
             }
         });
@@ -194,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(isAccessFineLocationGranted)
+        if(viewModel.isAccessFineLocationGranted())
             getCurrentLocationWeather();
     }
 
@@ -216,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public void onRationaleAccepted(int requestCode) {
         Log.d("Test", " onRationaleAccepted "+requestCode);
         if(requestCode==ACCESS_FINE_LOCATION_PERMISSION_REQUEST)
-            isAccessFineLocationGranted=true;
+           viewModel.setAccessFineLocationGranted(true);
     }
 
     @Override
