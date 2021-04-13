@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 if(viewModel.isAccessFineLocationGranted()) {
                     getCurrentLocationWeather();
                 }
+                else  {checkLocationPermission();
+                }
             }
         });
     }
